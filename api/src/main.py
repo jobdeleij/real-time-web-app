@@ -1,6 +1,10 @@
 from loguru import logger
-from fastapi import FastAPI
+from bson.json_util import dumps
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Depends, FastAPI, WebSocket, WebSocketDisconnect
+
+from modules.websockets import ConnectionManager
+
 
 app = FastAPI(
     title="Real-time web application API",
@@ -18,11 +22,25 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+websockets_manager = ConnectionManager()
+
 
 @app.get("/test")
 async def test():
     logger.info("test endpoint invoked")
     return "Hello world"
+
+
+@app.websocket("/websocket")
+async def websocket_endpoint(websocket: WebSocket):
+    await websockets_manager.connect(websocket)
+    try:
+        while True:
+            data = await websocket.receive_json()
+            logger.info(data)
+            await websocket.send_json(dumps(data))
+    except WebSocketDisconnect:
+        await websockets_manager.disconnect(websocket)
 
 
 if __name__ == "__main__":
