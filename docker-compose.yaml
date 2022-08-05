@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  mongodb:
+    container_name: real-time-web-app-mongodb
+    image: mongo:5.0.8
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb:/data/db
+      - ./mongo-initialize.js:/docker-entrypoint-initdb.d/mongo-init.js
+    env_file:
+      - .env
+    environment:
+      - PUID=1000
+      - PGID=1000
+    command: --auth --bind_ip_all
+
+volumes:
+  mongodb:
+    external: false

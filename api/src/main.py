@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Depends, FastAPI, WebSocket, WebSocketDisconnect
 
 from modules.websockets import ConnectionManager
-
+from services.weather_service import get_data_by_sensor_id, add_random_sensor_data
 
 app = FastAPI(
     title="Real-time web application API",
@@ -36,9 +36,12 @@ async def websocket_endpoint(websocket: WebSocket):
     await websockets_manager.connect(websocket)
     try:
         while True:
-            data = await websocket.receive_json()
-            logger.info(data)
-            await websocket.send_json(dumps(data))
+            received_data = await websocket.receive_json()
+            sensor_id = received_data.get('sensorId')
+            sensor_data = await get_data_by_sensor_id(sensor_id)
+            logger.info(sensor_data)
+            await add_random_sensor_data(sensor_id)
+            await websocket.send_json(dumps(sensor_data))
     except WebSocketDisconnect:
         await websockets_manager.disconnect(websocket)
 
