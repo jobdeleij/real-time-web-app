@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "api"
+version = "1.0.0"
+description = "API project for real-time web application"
+authors = ["Job Deleij <jobdeleij@gmail.com>"]
+license = "Apache-2.0"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.79.0"
+uvicorn = "^0.18.2"
+gunicorn = "^20.1.0"
+loguru = "^0.6.0"
+websockets = "^10.3"
+pymongo = "^4.2.0"
+motor = "^3.0.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
