@@ -2,6 +2,7 @@ version: "3.9"
 services:
   mongodb:
     container_name: real-time-web-app-mongodb
+    restart: always
     image: mongo:5.0.8
     ports:
       - "27017:27017"
@@ -14,6 +15,27 @@ services:
       - PUID=1000
       - PGID=1000
     command: --auth --bind_ip_all
+  api:
+    container_name: real-time-web-app-api
+    restart: always
+    build: 
+      context: "api"
+      dockerfile: "docker/Dockerfile"
+    depends_on:
+      - mongodb
+    ports:
+      - "8000:8000"
+    command: gunicorn --worker-class uvicorn.workers.UvicornWorker --config /gunicorn_conf.py main:app
+  frontend:
+    container_name: real-time-web-app-frontend
+    restart: always
+    build: 
+      context: "frontend"
+      dockerfile: "docker/Dockerfile"
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
 
 volumes:
   mongodb:

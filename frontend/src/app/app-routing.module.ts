@@ -9,13 +9,13 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'DashboardComponent',
+    redirectTo: 'dashboard',
   }
 ];
 
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { useHash: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

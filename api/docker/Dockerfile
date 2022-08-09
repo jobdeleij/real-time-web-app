@@ -37,20 +37,15 @@ RUN poetry install --no-dev
 FROM python-base as production
 ENV FASTAPI_ENV=production
 
+WORKDIR /app
+
 COPY --from=builder-base $VENV_PATH $VENV_PATH
 COPY ./docker/gunicorn_conf.py /gunicorn_conf.py
 
-COPY ./docker/docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-
-RUN apt-get update && apt-get install 'ffmpeg' 'libsm6' 'libxext6'  -y
+RUN apt-get update && apt-get install 'ffmpeg' 'libsm6' 'libxext6' -y
 
 COPY ./src /app
-WORKDIR /app
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 ENV PORT=8000
-
-ENTRYPOINT /docker-entrypoint.sh $0 $@
-CMD ["gunicorn", "--worker-class uvicorn.workers.UvicornWorker", "--config /gunicorn_conf.py", "main:app"]
