@@ -8,4 +8,8 @@ COPY ../ .
 RUN npm run build --prod
 
 FROM nginx:alpine
-COPY --from=build-step /app/dist/tbd-frontend /usr/share/nginx/html
+COPY docker/nginx.conf /etc/nginx/conf.d/
+
+RUN rm -rf /usr/share/nginx/html/*
+
+COPY --from=build-step /app/dist/frontend /usr/share/nginx/html
