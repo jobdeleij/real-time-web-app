@@ -12,7 +12,7 @@ include {
     path = find_in_parent_folders()
 }
 
-dependency "noreply-deleijdevelopment-email-identity"  {
+dependency "noreply-email-identity"  {
     config_path = "../../../shared/ses/email_identity/noreply"
     mock_outputs = {
         arn = "arn"
@@ -29,6 +29,6 @@ dependency "default-email-configuration-set"  {
 inputs = {
   pool_name               = "${local.project_vars.locals.project_name}-pool"
   from_email_address      = local.account_vars.locals.no_reply_email
-  email_identity_arn      = dependency.noreply-deleijdevelopment-email-identity.outputs.arn
+  email_identity_arn      = dependency.noreply-email-identity.outputs.arn
   email_configuration_set = dependency.default-email-configuration-set.outputs.id
 }
