@@ -1,7 +1,7 @@
 from loguru import logger
 from bson.json_util import dumps
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi import Depends, FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import Depends, FastAPI, WebSocket, WebSocketDisconnect, status
 
 from modules.websockets import ConnectionManager
 from services.weather_service import get_data_by_sensor_id, add_random_sensor_data
